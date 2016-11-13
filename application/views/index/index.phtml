@@ -1,0 +1,204 @@
+<!--{extends file="main.phtml"}-->
+<!--{block name="body"}-->
+
+<div id="layout" class="easyui-layout" data-options="fit:true, border:false">
+
+	<!-- 菜单 -->
+	<div region="west" title="菜单导航" split="false" width="200">
+		<div class="easyui-accordion" style="padding:10px 0;" fit="true" border="false"></div>
+	</div>
+
+	<!-- 内容 -->
+	<div id="mainPanle" region="center" style="background: #eee; overflow-y:hidden">
+	<div id="tabs" class="easyui-tabs" fit="true" border="false">
+		<div title="系统主页" style="padding:15px;overflow:hidden;" id="home">
+			<div>小贴士：<!--{$myjj}--></div>
+	        <div id="tabTools" style="border: 0px; border-bottom: 1px solid #D3D3D3;">
+	            <a href="#" class="easyui-menubutton" style="padding: 0 18px;" data-options="menu:'#mm1',iconCls:'icon-man'">Admin</a>
+	            <div id="mm1">
+	                <div data-options="iconCls:'icon-reload'" id="refreshAuth">刷新权限</div>
+	                <div data-options="iconCls:'icon-lock'" id="editpass">修改密码</div>                
+	                <div data-options="iconCls:'icon-back'" id="loginOut">退出系统</div>
+	            </div>
+	        </div>
+		</div>
+		
+	</div>    
+	</div>
+	
+</div>
+
+<!--选项卡菜单-->
+<div id="tabsMenu">
+    <div data-options="iconCls:'glyphicon-refresh'" type="refresh" style="font-size: 12px;">刷新</div>
+    <div class="menu-sep"></div>
+    <div data-options="iconCls:'glyphicon-remove'" type="close" style="font-size: 12px;">关闭</div>
+    <div data-options="iconCls:''" type="closeOther">关闭其他</div>
+    <div data-options="iconCls:''" type="closeAll">关闭所有</div>
+</div>
+
+<!--修改密码窗口-->
+<div id="w" class="easyui-window" title="修改密码" collapsible="false" minimizable="false" maximizable="false" icon="icon-save" style="width: 350px; height:250px;padding: 5px; background: #fafafa;" data-options="iconCls:'icon-lock',closed:true">
+<div class="easyui-layout" fit="true">
+    <div region="center" border="false" style="padding: 10px; background: #fff; ">
+        <table cellpadding="5">
+            <tr>
+                <td>旧密码：</td>
+            <td><input id="txtOldPass" class="easyui-textbox" type="password" required="true"/></td>
+            </tr>
+            <tr>
+                <td>新密码：</td>
+                <td><input id="txtNewPass" class="easyui-textbox" type="password" required="true" validtype="length[4,20]"/></td>
+            </tr>
+            <tr>
+                <td>确认密码：</td>
+                <td><input id="txtRePass" class="easyui-textbox" type="password" required="true" validtype="length[4,20]"/></td>
+            </tr>
+        </table>
+    </div>
+    <div region="south" border="false" style="text-align: center; height: 30px; line-height: 30px;">
+        <a id="btnEp" class="easyui-linkbutton" icon="icon-ok" href="javascript:void(0)" style="width:65px">确定</a>
+        <a id="btnCancel" class="easyui-linkbutton" icon="icon-cancel" href="javascript:void(0)" style="width:65px">取消</a>
+    </div>
+</div>
+</div>
+
+<!--{/block}-->
+<!--{block name='script'}-->
+<script type="text/javascript" src="/public/js/index.js"></script>
+<script type="text/javascript">
+$(function() {
+	initTree();
+	if ($(window).width() < 767){ $('#main-layout').layout('collapse','west'); } 
+    //选项卡
+    window.mainTabs = $('#tabs').tabs({
+        fit : true,
+        border : false,
+        tools : "#tabTools",
+        onContextMenu : function(e, title) {
+            e.preventDefault();
+            tabsMenu.menu('show', {
+                left : e.pageX,
+                top : e.pageY
+            }).data('tabTitle', title);
+        }
+    });
+ 	// 选项卡菜单
+	window.tabsMenu = $('#tabsMenu').menu({
+	    onClick : function(item) {
+	        var curTabTitle = $(this).data('tabTitle');
+	        var type = $(item.target).attr('type');
+
+	        if (type === 'refresh') {
+	            var iframe = mainTabs.tabs('getSelected').panel('panel').find('iframe');
+	            iframe.attr("src", iframe.attr("src"));
+	            return;
+	        }
+
+	        if (type === 'close') {
+	            var t = mainTabs.tabs('getTab', curTabTitle);
+	            if (t.panel('options').closable) {
+	                mainTabs.tabs('close', curTabTitle);
+	            }
+	            return;
+	        }
+
+	        var allTabs = mainTabs.tabs('tabs');
+	        var closeTabsTitle = [];
+
+	        $.each(allTabs, function() {
+	            var opt = $(this).panel('options');
+	            if (opt.closable && opt.title != curTabTitle
+	                    && type === 'closeOther') {
+	                closeTabsTitle.push(opt.title);
+	            } else if (opt.closable && type === 'closeAll') {
+	                closeTabsTitle.push(opt.title);
+	            }
+	        });
+
+	        for ( var i = 0; i < closeTabsTitle.length; i++) {
+	            mainTabs.tabs('close', closeTabsTitle[i]);
+	        }
+	    }
+	});
+});
+
+/**
+ * 菜单初始化事件
+ */
+var initTree = function initTree() {
+    $.post("/index/_menuTree", function(data) {
+        var menulist = [];
+        $.each(data, function(i, item) {
+            menulist.push({
+                id: item.id,
+                text: item.name,
+                attributes: item.url, 
+                parent_id: item.pid,
+                iconCls: item.icon
+            });
+        });
+        
+        for(var i = 0; i < menulist.length; i++) {
+            var children = menulist[i].children || [];
+            for(var j = 0; j < menulist.length; j++) {
+                if(menulist[j].parent_id == menulist[i].id) {
+                    children.push(menulist[j]);
+                }
+            }
+            menulist[i].children = children;
+        }
+        
+        var treeData = [];
+        $.each(menulist, function(i, item) {
+            if(item.parent_id == 0) {
+                treeData.push(item);
+            }
+        });
+        $(".easyui-accordion").tree({
+            data: treeData,
+            onBeforeSelect: treeBeforeSelect, 
+            onSelect: treeSelect
+        });
+    });
+}
+
+/**
+ * 菜单事件
+ */
+var treeBeforeSelect = function treeBeforeSelect(node) {
+    if(node.children && node.children.length > 0) {
+        if(node.state == "open") {
+            $(this).tree("collapse", node.target);
+        }else {
+            $(this).tree("expand", node.target);
+        }
+        return false;
+    } 
+}
+
+/**
+ * 菜单事件
+ */
+var treeSelect = function treeSelect(node) {
+    addMainTab(node.text, node.attributes);
+}
+
+/**
+ * 增加一个主窗口
+ */
+var addMainTab = function addMainTab(text, url) {
+    if(!mainTabs.tabs("exists", text)) {
+        mainTabs.tabs('add',{
+            title: text,
+            content:'<iframe src="' + url + '" class="easyui-panel" data-options="fit:true,border:false" frameborder="0"></iframe>',
+            closable:true
+        });
+    }else {
+        mainTabs.tabs("select", text);
+        //刷新
+        mainTabs.tabs('getSelected').panel('panel').find('iframe').attr("src", url)
+    }
+}
+</script>
+<!--{/block}-->

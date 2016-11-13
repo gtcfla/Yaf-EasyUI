@@ -1,0 +1,8 @@
+
+构造函数增加配置(array)传入 // bug by link 2014-7-2
+
+fixed 1
+sysplugins\smarty_internal_cacheresource_file.php(142)
+    $_dir = realpath($smarty->getCacheDir());
+    =>
+    $_dir = realpath($smarty->getCacheDir()) . DS; // bug by link 2014-3-16
