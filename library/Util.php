@@ -18,18 +18,18 @@ class Util
 		$arr_file = [];
 		$filenames = scandir($dir, 1);
 		
-		for ($i = 0, $count = count($filenames); $i < $count; $i++) {
-			
+		for ($i = 0, $count = count($filenames); $i < $count; $i++)
+		{
 			$filename = $filenames[$i];
-		
-			if ($filename == '.' || $filename == '..' || $filename == '.svn' || ( !empty($filter) && preg_match($filter, $filename))) {
-				continue;
-			}
+			if ($filename == '.' || $filename == '..' || $filename == '.svn' || ( !empty($filter) && preg_match($filter, $filename))) continue;
 		
 			$file = $dirpath . DIRECTORY_SEPARATOR . $filename;
-			if (is_dir($file)) {
+			if (is_dir($file))
+			{
 				$arr_file = array_merge( $arr_file, self::directory_map($file));
-			} else {
+			}
+			else
+			{
 				$arr_file[] = $file;
 			}
 		}
