@@ -6,7 +6,7 @@ class LoginController extends BaseController {
 	
 	public function indexAction()
 	{
-		
+		$this->view();
 	}
 	
 	public function _queryAction()

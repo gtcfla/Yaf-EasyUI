@@ -127,7 +127,7 @@ $(function() {
  * 菜单初始化事件
  */
 var initTree = function initTree() {
-    $.post("/index/_menuTree", function(data) {
+    $.post("menu/_tree", function(data) {
         var menulist = [];
         $.each(data, function(i, item) {
             menulist.push({

@@ -10,6 +10,7 @@ class BaseController extends Yaf_Controller_Abstract
 	var $_c; //当前控制器
 	var $_a; //当前操作
 	var $_tpl = ''; //渲染指定模板
+	public $m = []; // 模型对象数组
 	
 	public function init()
 	{
@@ -30,7 +31,38 @@ class BaseController extends Yaf_Controller_Abstract
 	public function view()
 	{
 		$this->_view->assign('title', $this->_title ); // 设置标题
-		$this->_view->display($this->_tpl ? $this->_tpl : "{$this->_c}.phtml" );
+		$this->_view->display($this->_tpl ? $this->_tpl : $this->_c.'/'.$this->_a.'.phtml');
+	}
+	
+	public static function dump($var)
+	{
+		if (ini_get('html_errors'))
+		{
+			$content = "<pre>\n";
+			$content .= htmlspecialchars(print_r($var, true));
+			$content .= "\n</pre>\n";
+		}
+		else
+		{
+			$content = "\n";
+			$content .= print_r($var, true) . "\n";
+		}
+		echo $content;
+		return null;
+	}
+	
+	public function __unset($name)
+	{
+		if (substr($name, -5) === 'Model' && isset($this->m[$name])) unset($this->m[$name]);
+	}
+	
+	public function __get($name)
+	{
+		if (substr($name, -5) === 'Model')
+		{
+			if (isset($this->m[$name])) return $this->m[$name];
+			if (class_exists($name)) return ($this->m[$name] = new $name);
+		}
 	}
 	
 	public function __destruct()
@@ -40,6 +72,6 @@ class BaseController extends Yaf_Controller_Abstract
 	
 	public function log()
 	{
-		Seaslog::info();
+// 		Seaslog::info();
 	}
 }

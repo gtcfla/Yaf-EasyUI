@@ -97,33 +97,6 @@ class IndexController extends BaseController
 		);
 		$this->_view->assign('myjj', $myjj[rand(0, count( $myjj )-1 )]); // 随机名言警句
 		$this->_view->assign('content', 'hello world!');
-	}
-	
-	public function _queryAction()
-	{
-		exit('_query action');
-	}
-
-	public function _menuTreeAction()
-	{
-		header( 'Content-type: application/json' );
-		header( 'Connection: close' );
-		$menu = [
-				['id' => 1, 'pid' => 0, 'name' => '一级菜单'],
-				['id' => 2, 'pid' => 1, 'name' => '二级菜单', 'url' => 'index/_query'],
-				['id' => 3, 'pid' => 1, 'name' => '1二级菜单', 'url' => 'index/hello'],
-				['id' => 4, 'pid' => 0, 'name' => '一级菜单'],
-				['id' => 5, 'pid' => 4, 'name' => '2二级菜单', 'url' => 'login/index'],
-		];
-		exit(json_encode($menu));
-	}
-	
-	public function helloAction()
-	{
-		$root_path = Yaf_Registry::get('config')->application->directory;
-		$root_path .= DIRECTORY_SEPARATOR.'controllers';
-		$arr_file = Util::directory_map($root_path);
-		print_r($arr_file);
-		exit;
+		$this->view();
 	}
 }
