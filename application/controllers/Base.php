@@ -2,15 +2,17 @@
 
 class BaseController extends Yaf_Controller_Abstract
 {
-	var $_config; //全局配置
-	var $_title; //模块标题
-	var $_view = null; //模板视图对象
-	var $_api = false; //是否接口
-	var $_req = null; //请求对象
-	var $_c; //当前控制器
-	var $_a; //当前操作
-	var $_tpl = ''; //渲染指定模板
+	public $_config; //全局配置
+	public $_title; //模块标题
+	public $_view = null; //模板视图对象
+	public $_api = false; //是否接口
+	public $_req = null; //请求对象
+	public $_c; //当前控制器
+	public $_a; //当前操作
+	public $_tpl = ''; //渲染指定模板
 	public $m = []; // 模型对象数组
+	public $_result = ['ack' => 0, 'msg' => '', 'data' => [], 'total' => 0]; //返回数据格式
+	public $_msg = [0 => '失败', 1 => '成功', 2 => '你没有此操作的权限,请联系管理员!', 3 => '你还未登录,请先登录!', 4 => '退出成功']; //错误码对应消息
 	
 	public function init()
 	{
@@ -31,9 +33,15 @@ class BaseController extends Yaf_Controller_Abstract
 	public function view()
 	{
 		$this->_view->assign('title', $this->_title ); // 设置标题
-		$this->_view->display($this->_tpl ? $this->_tpl : $this->_c.'/'.$this->_a.'.phtml');
+		$this->_view->display($this->_tpl ? $this->_tpl : strtolower($this->_c.'/'.$this->_a).'.phtml');
 	}
 	
+	/**
+	 * 客户端调试用输出格式化
+	 * @param 变量 $var
+	 * @return return_type
+	 * @author Mr.Z <gtcfla@gmail.com> 2016年11月17日
+	 */
 	public static function dump($var)
 	{
 		if (ini_get('html_errors'))
@@ -49,6 +57,14 @@ class BaseController extends Yaf_Controller_Abstract
 		}
 		echo $content;
 		return null;
+	}
+	
+	public function result()
+	{
+		header('Content-type: application/json');
+		header('Connection: close');
+		$this->_result['msg'] = $this->_msg[$this->_result['ack']];
+		exit(json_encode($this->_result));
 	}
 	
 	public function __unset($name)

@@ -1,13 +1,7 @@
 <?php
-/**
- * @name IndexController
- * @author root
- * @desc 默认控制器
- * @see http://www.php.net/manual/en/class.yaf-controller-abstract.php
- */
 class IndexController extends BaseController
 {
-
+	public $_title = '主页';
 	public function indexAction()
 	{
 		$myjj = array(

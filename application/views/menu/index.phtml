@@ -1,0 +1,45 @@
+﻿<!--{extends file="main.phtml"}-->
+<!--{block name="body"}-->
+<table id="d_table" class="easyui-datagrid" fit="true" data-options="rownumbers:true,singleSelect:true,method:'get',toolbar:'#toolbar'"></table>
+<div id="m_div" class="easyui-dialog" data-options="closed:true,modal:true,onClose:clearForm" style="display: none;">
+	<div id="toolbar">
+	<a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="openAdd()">新增</a>
+	<a href="#" class="easyui-linkbutton" iconCls="icon-reload" plain="true" onclick="importMenu()">导入</a>
+	</div>
+    <div style="padding:10px 60px 20px 60px">
+        <form id="m_form">
+            <table cellpadding="5">
+                <tr>
+                    <td>父项:</td>
+                    <td><input id="m_frid" class="easyui-combotree" name="pid" data-options="required:true,panelHeight:'200px',panelWidth:'220px'" style="width:156px;" ></td>
+                    <td>名称:</td>
+                    <td><input class="easyui-textbox" type="text" name="name" required="true" /></td>
+                </tr>
+                <tr>
+                    <td>控制器:</td>
+                    <td><input type="text" name="controller" class="easyui-textbox" /></td>
+                    <td>方法:</td>
+                    <td><input class="easyui-textbox" name="action"/></td>
+                </tr>
+                <tr>
+                    <td>排序:</td>
+                    <td><input class="easyui-textbox" type="text" name="sort" /></td>
+                    <td>状态:</td>
+                    <td>
+                        <label ><input type="radio" name="display" value="1" checked="true"/>&nbsp;显示</label>
+                        <label ><input type="radio" name="display" value="0"/>&nbsp;隐藏</label>
+                    </td>
+                </tr>
+            </table>
+            <input type="hidden" name="id" id="m_id" value="">
+        </form>
+        <div style="text-align:center;padding:5px">                            
+            <a class="easyui-linkbutton c6" iconCls="icon-ok" onclick="javascript:submitForm()" style="width:65px">提交</a>
+            <a class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#m_div').dialog('close')" style="width:65px">取消</a>
+        </div>
+    </div>
+</div>
+<!--{/block}-->
+<!--{block name='script'}-->
+<script type="text/javascript" src="/public/js/menu.js"></script>
+<!--{/block}-->
