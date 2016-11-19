@@ -29,8 +29,13 @@ class MenuController extends BaseController
 	
 	public function _deleteAction()
 	{
-		if ($id = $this->_req->getPost('id')) $this->_result['ack'] = $this->menu->delete(["id" => $id]);
-		$this->result();
+		if ($id = $this->_req->getPost('id')) 
+		{
+			$this->menu->delete(["id" => $id]);
+			$this->menu->delete(["pid" => $id]);
+			$this->_result['ack'] = 1;
+			$this->result();
+		}
 	}
 
 	public function _queryAction()
@@ -52,7 +57,7 @@ class MenuController extends BaseController
 		{
 			if (isset($_POST[$field])) $data[$field] = !strlen( $this->_req->getPost($field)) ? null : $this->_req->getPost($field); //参数获取(post)
 		}
-		if ($id && $data && $this->menu->updateMenu($data, $id)) $this->_result['ack'] = 1; // 设置返回状态&错误信息
+		if ($id && $data && $this->menu->updateMenuById($data, $id)) $this->_result['ack'] = 1; // 设置返回状态&错误信息
 		$this->result();
 	}
 	
@@ -100,25 +105,7 @@ class MenuController extends BaseController
 				}
 			}
 		}
-		foreach ($arr_data as $k => $ad)
-		{
-			list($data['controller'], $data['name']) = explode('_', $k);
-			$data['action'] = 'index';
-			$last_id = $this->menu->insert($data);
-			if (!$last_id) $last_id = $this->menu->select('id', ['AND' => $data])[0];
-			foreach ($ad as $d)
-			{
-				if ($d === 'index') continue;
-				$child = [
-					'pid' => $last_id,
-					'name' => $d,
-					'controller' => $data['controller'],
-					'action' => $d
-				];
-				$this->menu->insert($child);
-			}
-		}
-		$this->_result['ack'] = 1;
+		$this->_result['ack'] = $this->menu->updateMenuList($arr_data);
 		$this->result();
 	}
 }

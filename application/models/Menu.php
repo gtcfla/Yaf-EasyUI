@@ -27,13 +27,50 @@ class MenuModel extends Db_medoo
 		return $this->query("SELECT id, pid, name, CONCAT(controller, '/', action) AS url, sort FROM {$this->table} WHERE display=1 ORDER BY sort DESC;")->fetchAll();
 	}
 	
-	public function updateMenu($data=[], $ids=[])
+	public function updateMenuById($data=[], $ids=[])
 	{
 		if (isset($data['pid'] ))
 		{
-			return $this->update($this->bNodeSortMenu($data), ["id" => $ids]);
+			return $this->update($this->bNodeSortMenu($data), ['id' => $ids]);
 		}
-		return $this->update($data, ["id" => $ids]);
+		return $this->update($data, ['id' => $ids]);
+	}
+	
+	public function updateMenuList($data)
+	{
+		$new = [];
+		foreach ($data as $k => $d)
+		{
+			list($new['controller'], $new['name']) = explode('_', $k);
+			$new['action'] = 'index';
+			$new['display'] = 1;
+			$last_id = $this->insert($new) ?: $this->select('id', ['AND' => $new])[0]; // php7三元运算写法
+			unset($d['index']); // 去掉index
+			$menu = $this->select(['controller', 'action'], ["pid" => $last_id]);
+			$old = $del = [];
+			foreach ($menu as $m)
+			{
+				$old[] = $m['action'];
+			}
+			foreach ($d as $v)
+			{
+				$key = $new['controller'].'_'.$v;
+				if (in_array($key, $old)) continue;
+				$this->insert([
+					'pid' => $last_id,
+					'name' => $v,
+					'controller' => $new['controller'],
+					'action' => $v
+				]);
+			}
+			// 删除不存在的CA
+			$del = array_diff($old, $d);
+			foreach ($del as $de)
+			{
+				$this->delete(['AND' => ['controller' => $new['controller'], 'action' => $de]]);
+			}
+		}
+		return true;
 	}
 	
 	private function bNodeSortMenu($data = [])
