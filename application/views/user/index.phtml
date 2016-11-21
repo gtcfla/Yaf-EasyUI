@@ -1,0 +1,61 @@
+<!--{extends file="main.phtml"}-->
+<!--{block name='title'}--><!--{$title}--><!--{/block}-->
+<!--{block name="body"}-->
+<div region="north" style="overflow-y: hidden;" scroll="no">
+    <form id="s_form" style="margin-bottom: 0em; padding: 10px 0px;">
+	                         帐户名: <input class="easyui-textbox" style="width:110px" id="s_uname">
+	                         姓名: <input class="easyui-textbox" style="width:110px" id="s_name">
+	                         状态: 
+            <select class="easyui-combobox" panelHeight="auto" id="s_state"style="width:100px">
+                <option value="">全部</option>
+                <option value="1">启用</option>
+                <option value="0">禁用</option>
+            </select>
+            <a href="#" class="easyui-linkbutton" id="search" iconCls="icon-search">查询</a>
+    </form>
+</div>
+
+<div region="center">
+<div id="tp">
+    <a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="javascript:userAdd()">新增</a>
+    <a href="#" class="easyui-linkbutton" iconCls="icon-no" plain="true" onclick="javascript:batchOperate('2');">禁用</a>
+    <a href="#" class="easyui-linkbutton" iconCls="icon-ok" plain="true" onclick="javascript:batchOperate('1');">启用</a>
+</div>
+<table id="d_table" class="easyui-datagrid" fit="true" data-options="rownumbers:false,singleSelect:false,method:'get',toolbar:'#tp',pagination:'true'"></table>
+<div id="m_div" class="easyui-dialog" data-options="closed:true,modal:true,onClose:clearForm">
+    <div style="padding:10px 60px 20px 60px">
+        <form id="m_form">
+            <table cellpadding="5">
+                <tr>
+                    <td>ID:</td>
+                    <td><input class="easyui-textbox" name="id" id="m_id" style="width:156px;" /></td>
+                    <td>帐号:</td>
+                    <td><input class="easyui-textbox" type="text" name="name" required="true" validtype="length[3,20]" id="m_uname" /></td>
+                </tr>
+                <tr>
+                    <td>密码:</td>
+                    <td><input type="password" required="true" validtype="length[4,20]" name="password" class="easyui-textbox" id="m_pwd"/></td>
+                    <td>姓名:</td>
+                    <td><input class="easyui-textbox" name="realname" required="true" validtype="engOrChineseAndLength"/></td>
+                </tr>
+                <tr>
+                    <td>状态:</td>
+                     <td>
+                        <label ><input type="radio" name="state" value="1" checked="true"/>&nbsp;有效</label>
+                        <label ><input type="radio" name="state" value="2"/>&nbsp;无效</label>
+                    </td>
+                </tr>
+            </table>
+        </form>
+        <div style="text-align:center;padding:5px">
+            <a class="easyui-linkbutton" iconCls="icon-ok" onclick="javascript:submitForm()" style="width:65px">提交</a>
+            <a class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#m_div').dialog('close')" style="width:65px">取消</a>
+        </div>
+    </div>
+</div>
+
+</div>
+<!--{/block}-->
+<!--{block name='script'}-->
+<script type="text/javascript" src="/public/js/user.js"></script>
+<!--{/block}-->

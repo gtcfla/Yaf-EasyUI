@@ -32,7 +32,6 @@ class MenuController extends BaseController
 		if ($id = $this->_req->getPost('id')) 
 		{
 			$this->menu->delete(["id" => $id]);
-			$this->menu->delete(["pid" => $id]);
 			$this->_result['ack'] = 1;
 			$this->result();
 		}
@@ -40,8 +39,8 @@ class MenuController extends BaseController
 
 	public function _queryAction()
 	{
-		header( 'Content-type: application/json' );
-		header( 'Connection: close' );
+		header('Content-type: application/json');
+		header('Connection: close');
 		if ($id = $this->_req->getQuery('id'))
 		{
 			$data = $this->menu->select("*", ["id" => $id]);

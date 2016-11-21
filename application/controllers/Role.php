@@ -17,4 +17,14 @@ class RoleController extends BaseController
 	{
 		
 	}
+	
+	public function _queryAction()
+	{
+		
+	}
+	
+	public function _updateAction()
+	{
+		
+	}
 }
