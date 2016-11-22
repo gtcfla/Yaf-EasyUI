@@ -31,7 +31,8 @@ class MenuController extends BaseController
 	{
 		if ($id = $this->_req->getPost('id')) 
 		{
-			$this->menu->delete(["id" => $id]);
+			$this->menu->delete(['id' => $id]);
+			$this->menu->update(['pid' => 0], ['pid' => $id]);
 			$this->_result['ack'] = 1;
 			$this->result();
 		}
@@ -54,7 +55,7 @@ class MenuController extends BaseController
 		$data = [];
 		foreach (['pid', 'name', 'controller', 'action', 'sort', 'display'] as $field)
 		{
-			if (isset($_POST[$field])) $data[$field] = !strlen( $this->_req->getPost($field)) ? null : $this->_req->getPost($field); //参数获取(post)
+			if ($this->_req->getPost($field)) $data[$field] = $this->_req->getPost($field); //参数获取(post)
 		}
 		if ($id && $data && $this->menu->updateMenuById($data, $id)) $this->_result['ack'] = 1; // 设置返回状态&错误信息
 		$this->result();
@@ -105,6 +106,27 @@ class MenuController extends BaseController
 			}
 		}
 		$this->_result['ack'] = $this->menu->updateMenuList($arr_data);
+		$this->result();
+	}
+	
+	public function _queryTreeAction()
+	{
+		$pid = $this->_req->getQuery('pid');
+		$frid = $this->_req->getQuery('role_id');
+		$menuList = $this->menu->getMenuTreeList();
+		$roleMenuId = [];
+		if (!empty($menuList) && $frid)
+		{
+			$roleMenu = new RoleMenuModel();
+			$roleMenuId = $roleMenu->getRoleMenuIdList( $frid );
+		}
+		foreach( $menuList as $k => $v )
+		{
+			$data[$v['id']] = $v;
+			$data[$v['id']]['checked'] = in_array( $v['id'], $roleMenuId ) ? true : false;
+		}
+		$this->_result['data'] = Util::getTree($data);
+		$this->_pfmt = 'jd';
 		$this->result();
 	}
 }

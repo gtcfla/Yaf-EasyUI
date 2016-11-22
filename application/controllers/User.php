@@ -63,4 +63,16 @@ class UserController extends BaseController
 		}
 		$this->result();
 	}
+	
+	public function _updatePassWordAction()
+	{
+		$oldPassword = $this->_req->getPost('oldPassword'); //原用户密码
+		$newPassword = $this->_req->getPost('newPassword'); //新设密码
+		$data = array();
+		if (!empty($oldPassword) && !empty($newPassword))
+		{
+			$this->_result['ack'] = 1;
+		}
+		$this->result();
+	}
 }

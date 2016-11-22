@@ -13,19 +13,16 @@ $(function() {
             width:200,
             align:"left"
         }, {
-            field:"ATIME",
+            field:"create_time",
             title:"创建时间",
-            width:120,
+            width:150,
             align:"center",
-            formatter:function(value, rec) {
-                return date("Y-m-d H:i", value);
-            },
             sortable:true,
             sorter:function(a, b) {
                 return a > b ? 1 :-1;
             }
         }, {
-            field:"MTIME",
+            field:"update_time",
             title:"修改时间",
             width:150,
             align:"center",
@@ -53,7 +50,7 @@ $(function() {
             
             var $selected = $tgrid.treegrid("getSelected");
             grantTree.tree({
-                url:"/menu/_queryTree/?FRID=" + $selected.id,
+                url:"/menu/_queryTree/?role_id=" + $selected.id,
                 checkbox:true,
                 lines:true,
                 cascadeCheck:false, //false
@@ -61,7 +58,7 @@ $(function() {
             $userGrid.datagrid({
                 url:"/user/_query/",
                 queryParams:{
-                    FRID:$selected.id
+                    role_id:$selected.id
                 }
             });
         },
@@ -118,12 +115,12 @@ $(function() {
     $userGrid.datagrid({
         remoteSort:false,
         columns:[ [ {
-            field:"FNAME",
+            field:"rolename",
             title:"角色",
             width:100,
             align:"center"
         }, {
-            field:"UNAME",
+            field:"name",
             title:"帐号",
             width:100,
             align:"center",
@@ -132,57 +129,27 @@ $(function() {
                 return a > b ? 1 :-1;
             }
         }, {
-            field:"NAME",
+            field:"realname",
             title:"姓名",
             width:100,
             align:"center"
-        }, {
-            field:"SEX",
-            title:"性别",
-            width:100,
-            align:"center",
-            formatter:function(value, rec) {
-                if (rec.SEX == 1) {
-                    return "男";
-                } else {
-                    return "女";
-                }
-            }
-        }, {
-            field:"EMAIL",
-            title:"邮箱",
-            width:100,
-            align:"center"
-        }, {
-            field:"PHONE",
-            title:"手机",
-            width:100,
-            align:"center"
-        }, {
-            field:"QQ",
-            title:"QQ",
-            width:100,
-            align:"center"
-        }, {
-            field:"ATIME",
+        },{
+            field:"create_time",
             title:"注册时间",
             width:120,
             align:"center",
-            formatter:function(value, rec) {
-                return date("Y-m-d H:i", rec.ATIME);
-            },
             sortable:true,
             sorter:function(a, b) {
                 return a > b ? 1 :-1;
             }
         }, {
-            field:"STATE",
+            field:"state",
             title:"状态",
             width:100,
             align:"center",
             iconCls:"icon-help",
             formatter:function(value, rec) {
-                if (rec.STATE == 1) {
+                if (rec.state == 1) {
                     return "<span class='l-btn-text icon-ok' style='padding-left: 20px;'>&nbsp;</span>";
                 } else {
                     return "<span class='l-btn-text icon-no' style='padding-left: 20px;'>&nbsp;</span>";
@@ -217,19 +184,19 @@ var toGrant = function() {
                     }
                 });
             } else {
-                showMsg({state:1,msg:"请选择授权的权限！"});
+                showMsg({ack:1,msg:"请选择授权的权限！"});
             }
         } else {
-            showMsg({state:1,msg:"请选择修改的记录！"});
+            showMsg({ack:1,msg:"请选择修改的记录！"});
         }
     }
 /* 编辑用户 */
 var updateDialog = function(_id) {
     if (!_id) {
-        showMsg({state:1,msg:"编辑的记录ID无效！"});
+        showMsg({ack:1,msg:"编辑的记录ID无效！"});
     } else {
         var queryParam = {
-            ID:_id,
+            id:_id,
             page:1
         };
         $.ajax({
@@ -244,11 +211,11 @@ var updateDialog = function(_id) {
                 } else {
                     var _data = data.rows[0];
                     $("#m_form").form("load", {
-                        ID:_data.ID,
-                        NAME:_data.NAME,
-                        SORT:_data.SORT
+                        id:_data.id,
+                        name:_data.text,
+                        sort:_data.sort
                     });
-                    $tfrid.combotree("setValue", _data.PID);
+                    $tfrid.combotree("setValue", _data.pid);
                     setEditTitle();
                     $("#m_div").dialog("open");
                 }

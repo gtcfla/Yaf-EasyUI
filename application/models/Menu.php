@@ -1,7 +1,7 @@
 <?php
 class MenuModel extends Db_medoo
 {
-	public $table = 'y_nca'; // 表名
+	public $table = 'y_menu'; // 表名
 	
 	public function __construct($pool = 'm0')
 	{
@@ -19,12 +19,12 @@ class MenuModel extends Db_medoo
 	
 	public function getMenuTreeList()
 	{
-		return $this->query("SELECT id, pid, name as text, display, controller, action, sort FROM {$this->table} ORDER BY sort DESC;")->fetchAll();
+		return $this->query("SELECT id, pid, name as text, display, controller, action, sort FROM {$this->table} ORDER BY sort DESC;")->fetchAll(PDO::FETCH_ASSOC);
 	}
 	
 	public function getMenu()
 	{
-		return $this->query("SELECT id, pid, name, CONCAT(controller, '/', action) AS url, sort FROM {$this->table} WHERE display=1 ORDER BY sort DESC;")->fetchAll();
+		return $this->query("SELECT id, pid, name, CONCAT(controller, '/', action) AS url, sort FROM {$this->table} WHERE display=1 ORDER BY sort DESC;")->fetchAll(PDO::FETCH_ASSOC);
 	}
 	
 	public function updateMenuById($data=[], $ids=[])

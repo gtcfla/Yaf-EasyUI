@@ -1,7 +1,7 @@
 <!--{extends file="main.phtml"}-->
 <!--{block name='title'}--><!--{$title}--><!--{/block}-->
 <!--{block name="body"}-->
-<div region="north" style="overflow-y: hidden;" scroll="no">
+<div region="north" style="overflow-y: hidden; display:none;" scroll="no">
     <form id="s_form" style="margin-bottom: 0em; padding: 10px 0px;">
 	                         帐户名: <input class="easyui-textbox" style="width:110px" id="s_uname">
 	                         姓名: <input class="easyui-textbox" style="width:110px" id="s_name">
@@ -16,13 +16,13 @@
 </div>
 
 <div region="center">
-<div id="tp">
-    <a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="javascript:userAdd()">新增</a>
-    <a href="#" class="easyui-linkbutton" iconCls="icon-no" plain="true" onclick="javascript:batchOperate('2');">禁用</a>
-    <a href="#" class="easyui-linkbutton" iconCls="icon-ok" plain="true" onclick="javascript:batchOperate('1');">启用</a>
-</div>
 <table id="d_table" class="easyui-datagrid" fit="true" data-options="rownumbers:false,singleSelect:false,method:'get',toolbar:'#tp',pagination:'true'"></table>
-<div id="m_div" class="easyui-dialog" data-options="closed:true,modal:true,onClose:clearForm">
+<div id="m_div" class="easyui-dialog" data-options="closed:true,modal:true,onClose:clearForm" style="display:none;">
+	<div id="tp">
+	    <a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="javascript:userAdd()">新增</a>
+	    <a href="#" class="easyui-linkbutton" iconCls="icon-no" plain="true" onclick="javascript:batchOperate('2');">禁用</a>
+	    <a href="#" class="easyui-linkbutton" iconCls="icon-ok" plain="true" onclick="javascript:batchOperate('1');">启用</a>
+	</div>
     <div style="padding:10px 60px 20px 60px">
         <form id="m_form">
             <table cellpadding="5">

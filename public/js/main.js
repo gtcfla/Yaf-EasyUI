@@ -21,14 +21,16 @@ var setEditTitle = function() {
 二、state=1时弹出提示信息(界面右下角显示)，state=0时弹出错误框(界面中间位置显示)
 */
 var showMsg = function(data) {
-    if (data.ack ==0) {
-        $.messager.alert("操作提示", data.msg,"error");
-    }else if (data.ack == 1) {
-        $.messager.show({
+    if (data.ack == 1)
+    {
+    	$.messager.show({
             title:"提示消息",
             msg:data.msg,
             timeout:2500,
             showType:"slide"
         });
+        
+    }else {
+    	$.messager.alert("操作提示", data.msg,"error");
     }   
 }
