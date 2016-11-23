@@ -46,8 +46,8 @@ $(function() {
             width:100,
             align:"center",
             formatter:function(value) {
-                var ctrs =  '<a title="编辑" onclick="updateDialog(\'' + value + '\');" class="" type="update" id=' + value + ">编辑</a>" ;
-                ctrs +=  '&nbsp;&nbsp;<a title="删除" onclick="deleteDialog(\'' + value + '\');" class="" type="delete" id=' + value + ">删除</a>" ;
+                var ctrs =  '<a href="javascript:;" title="编辑" onclick="updateDialog(\'' + value + '\');" class="" type="update" id=' + value + ">编辑</a>" ;
+                ctrs +=  '&nbsp;&nbsp;<a href="javascript:;" title="删除" onclick="deleteDialog(\'' + value + '\');" class="" type="delete" id=' + value + ">删除</a>" ;
                 return ctrs;
             }
         } ] ],

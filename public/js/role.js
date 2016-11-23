@@ -168,12 +168,12 @@ var toGrant = function() {
         var selected = $tgrid.treegrid("getSelected");
         var formData = {};
         if (selected) {
-            formData.FRID = selected.id;
+            formData.role_id = selected.id;
             if (ckd.length > 0) {
                 for (var i = 0, len = ckd.length; i < len; i++) {
                     fmidArr.push(ckd[i].id);
                 }
-                formData.FMID = fmidArr;
+                formData.menu_id = fmidArr;
                 $.ajax({
                     url:"/role/_updateRoleMenu/",
                     type:"POST",

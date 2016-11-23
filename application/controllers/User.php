@@ -16,11 +16,20 @@ class UserController extends BaseController
 	public function _queryAction()
 	{
 		$data = $options = $where = array();
-		foreach (['id', 'realname', 'state', 'name', 'create_time'] as $field)
+		foreach (['id', 'realname', 'state', 'name', 'create_time', 'role_id'] as $field)
 		{
 			if (!empty($this->_req->getQuery($field))) $data[$field] = $this->_req->getQuery($field);
 		}
-		$result = $this->selectCommon(['id', 'realname', 'name', 'state', 'type', 'create_time'], $data, $this->user);
+		$result = $this->selectCommon(['id','role_id', 'realname', 'name', 'state', 'type', 'create_time'], $data, $this->user);
+		$roleModel = new RoleModel();
+		$roleList = $roleModel->getRoleIdNameList();
+		if ( !empty( $this->_result['data'] ) && is_array($this->_result['data']))
+		{
+			foreach( $this->_result['data'] as $k => $v )
+			{
+				$this->_result['data'][$k]['rolename'] = $roleList[$v['role_id']];
+			}
+		}
 		$this->result();
 	}
 	
@@ -34,7 +43,7 @@ class UserController extends BaseController
 			$data['password'] = SHA1(MD5($data['password']));
 		}
 		
-		if ($data) $this->_result['ack'] = $this->user->insert($data); // 设置返回状态&错误信息
+		if ($data && $this->user->insert($data)) $this->_result['ack'] = 1; // 设置返回状态&错误信息
 		$this->result();
 	}
 	

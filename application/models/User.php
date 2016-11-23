@@ -1,7 +1,7 @@
 <?php
 class UserModel extends Db_medoo
 {
-	public $table = 'z_user'; // 表名
+	public $table = 'y_user'; // 表名
 
 	public function __construct($pool = 'm0')
 	{
