@@ -189,9 +189,9 @@ class Db_medoo
 		return $this->pdo->quote($string);
 	}
 
-	protected function table_quote()
+	protected function table_quote($table)
 	{
-		return '"' . $this->prefix . $this->table . '"';
+		return '"' . $this->prefix . $table . '"';
 	}
 
 	protected function column_quote($string)
@@ -565,7 +565,7 @@ class Db_medoo
 		}
 		else
 		{
-			$table = $this->table_quote();
+			$table = $this->table_quote($this->table);
 
 			$table_query = $table;
 		}
@@ -836,7 +836,7 @@ class Db_medoo
 				}
 			}
 
-			$this->exec('INSERT INTO ' . $this->table_quote() . ' (' . implode(', ', $columns) . ') VALUES (' . implode($values, ', ') . ')');
+			$this->exec('INSERT INTO ' . $this->table_quote($this->table) . ' (' . implode(', ', $columns) . ') VALUES (' . implode($values, ', ') . ')');
 
 			$lastId[] = $this->pdo->lastInsertId();
 		}
@@ -890,12 +890,12 @@ class Db_medoo
 			}
 		}
 
-		return $this->exec('UPDATE ' . $this->table_quote() . ' SET ' . implode(', ', $fields) . $this->where_clause($where));
+		return $this->exec('UPDATE ' . $this->table_quote($this->table) . ' SET ' . implode(', ', $fields) . $this->where_clause($where));
 	}
 
 	public function delete($where)
 	{
-		return $this->exec('DELETE FROM ' . $this->table_quote() . $this->where_clause($where));
+		return $this->exec('DELETE FROM ' . $this->table_quote($this->table) . $this->where_clause($where));
 	}
 
 	public function replace($columns, $search = null, $replace = null, $where = null)
