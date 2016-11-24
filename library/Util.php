@@ -85,4 +85,26 @@ class Util
 		}
 		$menuTree = $tmp;
 	}
+	
+	/**
+	 * SESSION 操作(读/写)
+	 *
+	 * @param  $ <type> $var1 读写键值
+	 * @param  $ <type> $var2 写入值
+	 * @return <type>
+	 */
+	static function session()
+	{
+		isset($_SESSION) || session_start();
+		$numargs = func_num_args();
+		if (1 === $numargs)
+		{ // get
+			return isset($_SESSION[func_get_arg(0)]) ? $_SESSION[func_get_arg(0)] : null;
+		}
+		if (2 <= $numargs)
+		{ // set
+			$_SESSION[func_get_arg(0)] = func_get_arg(1);
+			session_commit();
+		}
+	}
 }

@@ -1,22 +1,76 @@
 <!--{extends file="main.phtml"}-->
 <!--{block name='title'}--><!--{$title}--><!--{/block}-->
 <!--{block name="body"}-->
-       <table id="dg" title="My Users" class="easyui-datagrid" style="width:550px;height:250px"
-        url="get_users.php"
-        toolbar="#toolbar"
-        rownumbers="true" fitColumns="true" singleSelect="true">
-    	<thead>
-        <tr>
-            <th field="firstname" width="50">First Name</th>
-            <th field="lastname" width="50">Last Name</th>
-            <th field="phone" width="50">Phone</th>
-            <th field="email" width="50">Email</th>
-        </tr>
-    	</thead>
-</table>
-<div id="toolbar">
-    <a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="newUser()">New User</a>
-    <a href="#" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="editUser()">Edit User</a>
-    <a href="#" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="destroyUser()">Remove User</a>
+<div class="easyui-dialog" title=" " style="width:380px;height:180px" data-options="closable:false,buttons:[{text:'登录',iconCls:'icon-man',handler:login}]">
+<div class="easyui-layout" fit="true">
+    <div region="center" border="false" style="padding: 10px;">
+        <table align="center" style="padding: 10px;">
+            <tr>
+                <td>
+                <input id="userName" class="easyui-textbox" data-options="iconCls:'icon-man'" validtype="length[4,20]" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                <input id="password" class="easyui-passwordbox" validtype="length[4,20]" />
+                </td>
+            </tr>
+        </table>
+    </div>
+</div> 
 </div>
+<!--{/block}-->
+<!--{block name='script'}-->
+    <script type="text/javascript">
+     function login () {
+     	var $userName = $('#userName');
+        var $password = $('#password');
+        var $checkcode = $('#checkcode');
+
+        if ($userName.val() == '') {
+            $.messager.show({
+				title:'提示消息',
+				msg:'请输入用户名！',
+				timeout:3000,
+				showType:'slide'
+			});
+            return false;
+        }
+        if ($password.val() == '') {
+            $.messager.show({
+				title:'提示消息',
+				msg:'请输入密码！',
+				timeout:3000,
+				showType:'slide'
+			});
+            return false;
+        }
+       	
+       	var params = { 
+       		"uname":$.trim($userName.val()),
+       		"pwd":$.trim($password.val())
+       	};
+        $.ajax({
+        	url:'/user/_login/',
+        	type:'post',
+        	dataType:'json',
+        	data:params,
+        	success:function(data){
+        		var state = data.ack;
+        		if(parseInt(state,10) == 1){ 
+        			location.href='/';
+        		}else{ 
+        			$.messager.show({
+						title:'提示消息',
+						msg:data.msg,
+						timeout:3000,
+						showType:'slide'
+					});
+		            return false;
+        		}
+        	}
+        });
+       
+     }
+    </script>
 <!--{/block}-->

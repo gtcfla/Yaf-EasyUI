@@ -13,6 +13,64 @@ class UserController extends BaseController
 		$this->view();
 	}
 	
+	public function _loginAction()
+	{
+		$uname = $this->_req->getPost('uname');
+		$pwd = $this->_req->getPost('pwd');
+		try
+		{
+			if ($uname && $pwd)
+			{
+				$_user = $this->user->select(['id', 'role_id'], ['AND' => ['name' => $uname, 'password' => sha1(md5($pwd))]]);
+				if ($_user[0])
+				{
+					$this->setLoginState($_user[0]);
+					throw new Exception('登录成功!', 1);
+				}
+				else
+				{
+					throw new Exception('帐号或密码不正确!', 0);
+				}
+			}
+			else
+			{
+				throw new Exception( '帐号或密码无效!', 0 );
+			}
+		}
+		catch (Exception $e)
+		{
+			$this->_result['ack'] = $e->getCode();
+			$this->_result['msg'] = $e->getMessage();
+		}
+		$this->result();
+	}
+	
+	private function setLoginState($_user)
+	{
+		$_user['menutree'] = $_user['acl'] = $_user['ca'] = [];
+	
+		$roleMemuModel = new RoleMenuModel();
+		$roleMenuList = $roleMemuModel->getRoleMenuPidList($_user['role_id']); // 找到角色ID的菜单权限
+		if (!empty($roleMenuList))
+		{
+			foreach ($roleMenuList as $k => $v)
+			{
+				$arr_tmp[$v['id']] = $v;
+			}
+			foreach ($roleMenuList as $k => &$v)
+			{
+				$permission[trim(strtolower($v['controller'].'/'. $v['action'] ), '/')] = 1; // 设置权限
+				if ( isset( $arr_tmp[$v['pid']] ) ) {
+					$v['pname'] = $arr_tmp[$v['pid']]['name'];
+				}
+				$arr_ca[trim(strtolower($v['controller'].'/'. $v['action'] ), '/')] = $v;
+				if (!$v['display']) unset($roleMenuList[$k]); // 设置显示菜单
+			}
+			$menu_list = array('menus' => array());
+		}
+// 		Util::session('_user', $_user);
+	}
+	
 	public function _queryAction()
 	{
 		$data = $options = $where = array();

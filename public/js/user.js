@@ -149,11 +149,11 @@ var updateDialog = function(_id) {
 
 /* 禁用、启用 */
 var stateChange = function(_id, _state) {
-    var operStr = _state == 0 ? "禁用" :"启用";
+    var operStr = _state == 2 ? "禁用" :"启用";
     $.messager.confirm(operStr, "你确定要 " + operStr + " 这条记录吗?", function(r) {
         if (r) {
             var dataParam = {};
-            dataParam.ack = _state;
+            dataParam.state = _state;
             dataParam.id = _id;
             $.ajax({
                 url:"/user/_update/",

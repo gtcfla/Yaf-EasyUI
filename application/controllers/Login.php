@@ -11,6 +11,17 @@ class LoginController extends BaseController {
 	
 	public function _queryAction()
 	{
-		echo 123;exit;
+		Yaf_Session::getInstance();
+		var_dump($_SESSION['test']);
+	}
+	
+	public function _logoutAction()
+	{
+		setcookie(session_name(),null,-1,'/');
+		session_start();
+		session_destroy();
+		$this->_result['ack'] = 1;
+		$this->_result['data']['url'] = '/login/index';
+		$this->result();
 	}
 }

@@ -14,7 +14,8 @@ class RoleMenuModel extends Db_medoo
 	 */
 	public function getRoleMenuPidList($roleId)
 	{
-	} 
+		return $this->select(['[>]y_menu' => ['menu_id' => 'id']], ['y_menu.id', 'role_id', 'menu_id', 'pid', 'name', 'controller', 'action', 'display'],  [$this->table.'.role_id' => $roleId]);
+	}
 
 	/**
 	 * 查找角色拥有所属的菜单权限

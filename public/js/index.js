@@ -14,11 +14,11 @@ $(function() {
         function(r) {
             if (r) {
             	$.ajax({ 
-            		url:'/user/_logout/',
+            		url:'/login/_logout/',
             		type:'get',
             		dataType:'json',
             		success:function(data){ 
-            			var state = data.state;
+            			var state = data.ack;
             			if(parseInt(state,10) == 1){ 
                 			location.href = data.data.url;
             			}
