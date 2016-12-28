@@ -19,22 +19,22 @@ require_once "Smarty.class.php";
 
 define('SMARTY_PATH', __DIR__);
 define('SMARTY_SYSPLUGINS_DIR', __DIR__.DIRECTORY_SEPARATOR.'sysplugins'.DIRECTORY_SEPARATOR);
-Yaf_Loader::import( SMARTY_PATH."/Smarty.class.php");
-Yaf_Loader::import( SMARTY_SYSPLUGINS_DIR ."smarty_resource.php");
+Yaf\Loader::import( SMARTY_PATH."/Smarty.class.php");
+Yaf\Loader::import( SMARTY_SYSPLUGINS_DIR ."smarty_resource.php");
 
-Yaf_Loader::import( SMARTY_SYSPLUGINS_DIR ."smarty_internal_templatecompilerbase.php");
-Yaf_Loader::import( SMARTY_SYSPLUGINS_DIR . "smarty_internal_templatelexer.php");
-Yaf_Loader::import( SMARTY_SYSPLUGINS_DIR . "smarty_internal_templateparser.php");
-Yaf_Loader::import( SMARTY_SYSPLUGINS_DIR . "smarty_internal_compilebase.php");
-Yaf_Loader::import( SMARTY_SYSPLUGINS_DIR . "Smarty_Internal_Compile_Private_Print_Expression.php");
+Yaf\Loader::import( SMARTY_SYSPLUGINS_DIR ."smarty_internal_templatecompilerbase.php");
+Yaf\Loader::import( SMARTY_SYSPLUGINS_DIR . "smarty_internal_templatelexer.php");
+Yaf\Loader::import( SMARTY_SYSPLUGINS_DIR . "smarty_internal_templateparser.php");
+Yaf\Loader::import( SMARTY_SYSPLUGINS_DIR . "smarty_internal_compilebase.php");
+Yaf\Loader::import( SMARTY_SYSPLUGINS_DIR . "Smarty_Internal_Compile_Private_Print_Expression.php");
 
-Yaf_Loader::import( SMARTY_SYSPLUGINS_DIR . "smarty_internal_compile_private_modifier.php");
-Yaf_Loader::import( SMARTY_SYSPLUGINS_DIR . "smarty_internal_write_file.php");
-Yaf_Loader::import( SMARTY_SYSPLUGINS_DIR . "smarty_internal_resource_string.php");
+Yaf\Loader::import( SMARTY_SYSPLUGINS_DIR . "smarty_internal_compile_private_modifier.php");
+Yaf\Loader::import( SMARTY_SYSPLUGINS_DIR . "smarty_internal_write_file.php");
+Yaf\Loader::import( SMARTY_SYSPLUGINS_DIR . "smarty_internal_resource_string.php");
 
 
 
-class Smarty_Adapter implements Yaf_View_Interface {
+class Smarty_Adapter implements Yaf\View_Interface {
 	/**
 	 * Smarty object
 	 * 
@@ -55,7 +55,8 @@ class Smarty_Adapter implements Yaf_View_Interface {
 
 		if ( null !== $tmplPath ) {
 			$this->setScriptPath( $tmplPath );
-		} 
+		}
+
 		foreach ( $extraParams as $key => $value ) {
 			$this->_smarty->$key = $value;
 		}

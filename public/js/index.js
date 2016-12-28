@@ -36,7 +36,12 @@ $(function() {
                 if(data.state == 1){ 
                     parent.location.reload();
                 }
-				alert(data.msg);
+                $.messager.show({
+                    title: '提示消息',
+                    msg: data.msg,
+                    timeout: 3000,
+                    showType: 'slide'
+                });
             }
         })
     });        

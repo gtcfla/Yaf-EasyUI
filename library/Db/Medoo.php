@@ -7,7 +7,9 @@
  * Copyright 2016, Angel Lai
  * Released under the MIT license
  */
-class Db_medoo
+namespace Db;
+use PDO;
+class Medoo
 {
 	public $table;
 	// General
@@ -134,14 +136,12 @@ class Db_medoo
 			{
 				$commands[] = "SET NAMES '" . $this->charset . "'";
 			}
-
 			$this->pdo = new PDO(
 				$dsn,
 				$this->username,
 				$this->password,
 				$this->option
 			);
-
 			foreach ($commands as $value)
 			{
 				$this->pdo->exec($value);

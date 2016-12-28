@@ -1,5 +1,4 @@
-<!--{extends file="main.phtml"}-->
-<!--{block name="body"}-->
+<?php include APPLICATION_PATH . '/application/views/main.phtml';?>
 
 <div id="layout" class="easyui-layout" data-options="fit:true, border:false">
 
@@ -12,9 +11,9 @@
 	<div id="mainPanle" region="center" style="background: #eee; overflow-y:hidden">
 	<div id="tabs" class="easyui-tabs" fit="true" border="false">
 		<div title="系统主页" style="padding:15px;overflow:hidden;" id="home">
-			<div>小贴士：<!--{$myjj}--></div>
+			<div>小贴士：<?php echo $myjj;?></div>
 	        <div id="tabTools" style="border: 0px; border-bottom: 1px solid #D3D3D3;">
-	            <a href="#" class="easyui-menubutton" style="padding: 0 18px;" data-options="menu:'#mm1',iconCls:'icon-man'">Admin</a>
+	            <a href="#" class="easyui-menubutton" style="padding: 0 18px;" data-options="menu:'#mm1',iconCls:'icon-man'"><?php echo $_user['name']?></a>
 	            <div id="mm1">
 	                <div data-options="iconCls:'icon-reload'" id="refreshAuth">刷新权限</div>
 	                <div data-options="iconCls:'icon-lock'" id="editpass">修改密码</div>                
@@ -133,12 +132,11 @@ var initTree = function initTree() {
             menulist.push({
                 id: item.id,
                 text: item.name,
-                attributes: item.url, 
-                parent_id: item.pid,
-                iconCls: item.icon
+                attributes: item.controller+'/'+item.action,
+                parent_id: item.pid
             });
         });
-        
+        console.log(menulist);
         for(var i = 0; i < menulist.length; i++) {
             var children = menulist[i].children || [];
             for(var j = 0; j < menulist.length; j++) {
@@ -202,3 +200,5 @@ var addMainTab = function addMainTab(text, url) {
 }
 </script>
 <!--{/block}-->
+</body>
+</html>

@@ -1,12 +1,12 @@
 <?php
 
-class RoleMenuModel extends Db_medoo
+class RoleMenuModel extends Db\Medoo
 {
 	public $table = 'y_role_menu'; // 表名
 
 	public function __construct($pool = 'm0')
 	{
-		parent::__construct( Yaf_Registry::get( 'config' )->database->$pool->toArray() );
+		parent::__construct(Yaf\Registry::get( 'config' )->database->$pool->toArray());
 	}
 
 	/**
@@ -14,7 +14,7 @@ class RoleMenuModel extends Db_medoo
 	 */
 	public function getRoleMenuPidList($roleId)
 	{
-		return $this->select(['[>]y_menu' => ['menu_id' => 'id']], ['y_menu.id', 'role_id', 'menu_id', 'pid', 'name', 'controller', 'action', 'display'],  [$this->table.'.role_id' => $roleId]);
+		return $this->select(['[>]y_menu' => ['menu_id' => 'id']], ['y_menu.id', 'pid', 'name', 'controller', 'action', 'display'],  [$this->table.'.role_id' => $roleId]);
 	}
 
 	/**

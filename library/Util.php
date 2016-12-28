@@ -95,7 +95,7 @@ class Util
 	 */
 	static function session()
 	{
-		isset($_SESSION) || session_start();
+		session_id() || session_start();
 		$numargs = func_num_args();
 		if (1 === $numargs)
 		{ // get

@@ -1,11 +1,11 @@
 <?php
-class MenuModel extends Db_medoo
+class MenuModel extends Db\Medoo
 {
 	public $table = 'y_menu'; // 表名
 	
 	public function __construct($pool = 'm0')
 	{
-		parent::__construct( Yaf_Registry::get( 'config' )->database->$pool->toArray() );
+		parent::__construct( Yaf\Registry::get('config')->database->$pool->toArray());
 	}
 	
 	public function insertMenu($data)

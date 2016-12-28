@@ -7,12 +7,12 @@ class UserController extends BaseController
 		parent::init();
 		if ($this->_api) $this->user = new UserModel(); // 加载 实例化访问数据模型的对象
 	}
-	
+
 	public function indexAction()
 	{
 		$this->view();
 	}
-	
+
 	public function _loginAction()
 	{
 		$uname = $this->_req->getPost('uname');
@@ -21,8 +21,8 @@ class UserController extends BaseController
 		{
 			if ($uname && $pwd)
 			{
-				$_user = $this->user->select(['id', 'role_id'], ['AND' => ['name' => $uname, 'password' => sha1(md5($pwd))]]);
-				if ($_user[0])
+				$_user = $this->user->select(['id', 'name', 'role_id'], ['AND' => ['name' => $uname, 'password' => sha1(md5($pwd))]]);
+				if (isset($_user[0]))
 				{
 					$this->setLoginState($_user[0]);
 					throw new Exception('登录成功!', 1);
@@ -44,33 +44,24 @@ class UserController extends BaseController
 		}
 		$this->result();
 	}
-	
+
 	private function setLoginState($_user)
 	{
-		$_user['menutree'] = $_user['acl'] = $_user['ca'] = [];
-	
+		$_user['menutree'] = $_user['acl'] = [];
 		$roleMemuModel = new RoleMenuModel();
 		$roleMenuList = $roleMemuModel->getRoleMenuPidList($_user['role_id']); // 找到角色ID的菜单权限
 		if (!empty($roleMenuList))
 		{
-			foreach ($roleMenuList as $k => $v)
-			{
-				$arr_tmp[$v['id']] = $v;
-			}
 			foreach ($roleMenuList as $k => &$v)
 			{
-				$permission[trim(strtolower($v['controller'].'/'. $v['action'] ), '/')] = 1; // 设置权限
-				if ( isset( $arr_tmp[$v['pid']] ) ) {
-					$v['pname'] = $arr_tmp[$v['pid']]['name'];
-				}
-				$arr_ca[trim(strtolower($v['controller'].'/'. $v['action'] ), '/')] = $v;
+				$_user['acl'][trim(strtolower($v['controller'].'/'. $v['action'] ), '/')] = true; // 设置权限
 				if (!$v['display']) unset($roleMenuList[$k]); // 设置显示菜单
 			}
-			$menu_list = array('menus' => array());
+            $_user['menutree'] = $roleMenuList;
 		}
-// 		Util::session('_user', $_user);
+ 		Util::session('_user', $_user);
 	}
-	
+
 	public function _queryAction()
 	{
 		$data = $options = $where = array();
@@ -90,7 +81,7 @@ class UserController extends BaseController
 		}
 		$this->result();
 	}
-	
+
 	public function _addAction()
 	{
 		foreach (['realname', 'password', 'name', 'type', 'state'] as $field)
@@ -100,11 +91,11 @@ class UserController extends BaseController
 		if (!empty( $data['password'])) {
 			$data['password'] = SHA1(MD5($data['password']));
 		}
-		
+
 		if ($data && $this->user->insert($data)) $this->_result['ack'] = 1; // 设置返回状态&错误信息
 		$this->result();
 	}
-	
+
 	public function _updateAction()
 	{
 		$id = $this->_req->getPost('id'); //参数获取(post)
@@ -117,20 +108,18 @@ class UserController extends BaseController
 		if ( $id && $data)
 		{
 			$this->_result['ack'] = $this->user->update($data, ['id' => $id]);
-			// 如果是修改本人的信息则更新session
-// 			if ( isset( $data['FRID'] ) ) {
-// 				$_user = SQ::session( '_USER' );
-// 				$uid = $this->_req->getPost( 'ID' );
-// 				$user_info = $this->user->getUserById( $uid );
-// 				if ( $_user['UNAME'] == $user_info['UNAME'] && $_user['FRID'] != $data['FRID'] ) {
-// 					$_user['FRID'] = $data['FRID'];
-// 					$this->setLoginState( $_user );
-// 				}
-// 			}
 		}
 		$this->result();
 	}
-	
+
+    public function _refreshAction()
+    {
+        $this->setLoginState($this->_user);
+        $this->_result['ack'] = 1; // 设置返回状态&错误信息
+        $this->_result['msg'] = '刷新成功';
+        $this->result();
+    }
+
 	public function _updatePassWordAction()
 	{
 		$oldPassword = $this->_req->getPost('oldPassword'); //原用户密码

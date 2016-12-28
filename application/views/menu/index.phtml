@@ -1,4 +1,5 @@
-﻿<!--{extends file="main.phtml"}-->
+﻿<?php include APPLICATION_PATH . '/application/views/main.phtml';?>
+<!--{extends file="main.phtml"}-->
 <!--{block name="body"}-->
 <table id="d_table" class="easyui-datagrid" fit="true" data-options="rownumbers:true,singleSelect:true,method:'get',toolbar:'#toolbar'"></table>
 <div id="m_div" class="easyui-dialog" data-options="closed:true,modal:true,onClose:clearForm" style="display: none;">
@@ -43,3 +44,5 @@
 <!--{block name='script'}-->
 <script type="text/javascript" src="/public/js/menu.js"></script>
 <!--{/block}-->
+</body>
+</html>

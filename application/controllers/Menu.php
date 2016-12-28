@@ -2,9 +2,8 @@
 
 class MenuController extends BaseController
 {
-	public $_title = '菜单管理';
 	public $menu;
-
+	public $_title = '菜单管理';
 	public function init()
 	{
 		parent::init();
@@ -78,15 +77,15 @@ class MenuController extends BaseController
 	{
 		header( 'Content-type: application/json' );
 		header( 'Connection: close' );
-		exit(json_encode($this->menu->getMenu()));
+		exit(json_encode($this->_user['menutree']));
 	}
 	
 	public function _refreshAction()
 	{
-		$ctrl_path = Yaf_Registry::get('config')->application->directory;
+		$ctrl_path = $this->_config->application->directory;
 	    $ctrl_path .= DIRECTORY_SEPARATOR.'controllers';
 	    
-		$ctrl_files = Util::directoryMap($ctrl_path, '[Base.php|Error.php|T.php|Login.php|Index.php]');
+		$ctrl_files = Util::directoryMap($ctrl_path, '[Base.php|Error.php|T.php|Login.php|Index.php|Api.php]');
 		$arr_data = [];
 		foreach ($ctrl_files as $file)
 		{

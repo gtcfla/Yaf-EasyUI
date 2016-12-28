@@ -3,7 +3,7 @@
 class LoginController extends BaseController {
 
 	var $_title = '用户登录';
-	
+
 	public function indexAction()
 	{
 		$this->view();
